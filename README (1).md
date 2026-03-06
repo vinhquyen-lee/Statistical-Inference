@@ -8,8 +8,8 @@ Cas-DM improves standard Diffusion Models (DDPM) by introducing a cascaded archi
 * **Cascaded Architecture:** Utilizes two coupled U-Net modules:
     * **Module 1 ($\theta$):** Standard DDPM predicting noise $\epsilon$.
     * **Module 2 ($\phi$):** Predicts clean image $x_0$ and a mixing weight $r_t$, optimized with perceptual losses.
-* **Perceptual Loss Integration:** Supports LPIPS loss to enhance image quality and semantic consistency.
-* **Gradient Isolation:** Implements strict gradient blocking to ensure the metric functions do not degrade the noise prediction baseline.
+* Integrate Perceptual Loss to enhance image quality and semantic consistency.
+* Implements strict gradient blocking to ensure the metric functions do not degrade the noise prediction baseline.
 
 ## 🛠️ Installation
 
@@ -17,41 +17,28 @@ The code relies on the OpenAI `improved-diffusion` codebase structure.
 
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/your-username/cas-dm.git
-cd cas-dm
+git clone https://github.com/vinhquyen-lee/Cas-DM.git
+cd Cas-DM
 ```
 
 2. **Install dependencies:**
 ```bash
-pip install -r requirements.txt
+pip install -e .
 ```
-
-*Note: Ensure you have `torch`, `torchvision`, and `piq` (or `lpips`) installed for the perceptual loss functions.*
 
 ## 🚀 Usage
 
 ### 1. Data Preparation
-Prepare your dataset (e.g., CIFAR-10, LSUN, CelebA-HQ) in a folder. The code handles resizing and center-cropping automatically.
+Prepare dataset (e.g., CIFAR-10, LSUN, CelebA-HQ) in a folder. The code handles resizing and center-cropping automatically.
 
-### 2. Training Cas-DM
-To train the model, use the `casdm_train.py` script. This script initializes both the base noise predictor ($\theta$) and the cascaded refiner ($\phi$).
+### 2. Training Cas-DM and Sampling
+Due to limited local GPU resources, the model training and image sampling processes were conducted on Kaggle using the `cas-dm.ipynb` notebook.
 
-**Example Training Command:**
-```bash
-python scripts/casdm_train.py --data_dir /path/to/your/dataset --image_size 64 --num_channels 128 --num_res_blocks 3 --learn_sigma True --diffusion_steps 4000 --noise_schedule cosine --lr 1e-4 --batch_size 128 --use_lpips True
-```
+### 3. Model Evaluation
+The performance of the model is evaluated using two commonly used metrics in generative models:
+* **Fréchet Inception Distance (FID):** Measures the similarity between generated images and real images. Lower FID values indicate better performance.
 
-**Key Arguments:**
-* `--use_lpips`: Set to True to enable LPIPS loss for the second module ($\phi$).
-* `--learn_sigma`: Recommended True for improved log-likelihood and sample quality.
-* `--diffusion_steps`: Total diffusion steps (default: 4000).
-
-### 3. Sampling
-Generate images using the trained checkpoints. The sampling process utilizes the learned mixing weight $r_t$ to combine predictions from both modules.
-
-```bash
-python scripts/image_sample.py --model_path /path/to/model_phi.pt --num_samples 1000 --batch_size 16 --image_size 64
-```
+* **Inception Score (IS):** Evaluates both the quality and diversity of the generated images. Higher IS values indicate better performance.
 
 ## 📂 Code Structure
 * `scripts/casdm_train.py`: Main entry point for training the Cascaded Diffusion Model. Handles the initialization of dual U-Nets and the specific Cas-DM loss computation.
@@ -63,11 +50,14 @@ python scripts/image_sample.py --model_path /path/to/model_phi.pt --num_samples 
 If you find this code useful, please cite our paper:
 
 ```bibtex
-@article{casdm2024,
-  title={Cascaded Diffusion Models for High-Fidelity Image Generation},
-  author={Your Name and Co-authors},
-  journal={arXiv preprint},
-  year={2024}
+@misc{ho2021cascadeddiffusionmodelshigh,
+      title={Cascaded Diffusion Models for High Fidelity Image Generation}, 
+      author={Jonathan Ho and Chitwan Saharia and William Chan and David J. Fleet and Mohammad Norouzi and Tim Salimans},
+      year={2021},
+      eprint={2106.15282},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2106.15282}, 
 }
 ```
 
@@ -76,7 +66,3 @@ This codebase is built upon OpenAI's Improved Diffusion. We thank the authors fo
 
 ---
 
-### Các điểm cần lưu ý khi bạn sử dụng file này:
-1. **Phần "Installation":** README giả định bạn dùng thư viện `piq` hoặc `lpips`. Nếu bạn dùng thư viện khác, hãy chỉnh lại cho phù hợp.
-2. **Đường dẫn script:** Nếu file `casdm_train.py` nằm ở thư mục gốc, hãy bỏ `scripts/` trong lệnh chạy.
-3. **Argument `--use_lpips`:** Hãy kiểm tra lại trong `casdm_train.py` tên chính xác của argument kích hoạt LPIPS (ví dụ: `--use_metric_loss`, `--lambda_lpips`, v.v.) để chỉnh lại cho khớp.
