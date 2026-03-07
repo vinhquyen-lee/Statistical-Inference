@@ -1,17 +1,17 @@
 # Cascaded Diffusion Model (Cas-DM) Implementation
 
-This repository contains the official PyTorch implementation of the paper **"Cascaded Diffusion Models for High-Fidelity Image Generation"**.
+This is the code based on the paper [**Cascaded Diffusion Models for High-Fidelity Image Generation**](https://arxiv.org/pdf/2106.15282).
 
-Cas-DM improves standard Diffusion Models (DDPM) by introducing a cascaded architecture that allows the effective integration of perceptual metrics (like LPIPS) during training without destabilizing the noise prediction process.
+The goal of this research is to improve standard Diffusion Models (DDPM) to generate higher-quality images, overcoming the instability of the noise prediction process when integrating perceptual metrics (like LPIPS).
 
-## 🌟 Key Features
+## Key Features
 * **Cascaded Architecture:** Utilizes two coupled U-Net modules:
     * **Module 1 ($\theta$):** Standard DDPM predicting noise $\epsilon$.
     * **Module 2 ($\phi$):** Predicts clean image $x_0$ and a mixing weight $r_t$, optimized with perceptual losses.
 * Integrate Perceptual Loss to enhance image quality and semantic consistency.
 * Implements strict gradient blocking to ensure the metric functions do not degrade the noise prediction baseline.
 
-## 🛠️ Installation
+## Installation
 
 The code relies on the OpenAI `improved-diffusion` codebase structure.
 
@@ -26,7 +26,7 @@ cd Cas-DM
 pip install -e .
 ```
 
-## 🚀 Usage
+## Usage
 
 ### 1. Data Preparation
 Prepare dataset (e.g., CIFAR-10, LSUN, CelebA-HQ) in a folder. The code handles resizing and center-cropping automatically.
@@ -40,14 +40,8 @@ The performance of the model is evaluated using two commonly used metrics in gen
 
 * **Inception Score (IS):** Evaluates both the quality and diversity of the generated images. Higher IS values indicate better performance.
 
-## 📂 Code Structure
-* `scripts/casdm_train.py`: Main entry point for training the Cascaded Diffusion Model. Handles the initialization of dual U-Nets and the specific Cas-DM loss computation.
-* `improved_diffusion/unet.py`: Defines the U-Net architecture.
-* `improved_diffusion/train_util.py`: Utility functions for the training loop, optimizing steps, and logging.
-* `improved_diffusion/gaussian_diffusion.py`: Core diffusion process logic (forward/backward steps).
-
-## 📄 Reference
-If you find this code useful, please cite our paper:
+## Reference
+If you find this repository useful, please cite the original paper:
 
 ```bibtex
 @misc{ho2021cascadeddiffusionmodelshigh,
@@ -60,8 +54,13 @@ If you find this code useful, please cite our paper:
       url={https://arxiv.org/abs/2106.15282}, 
 }
 ```
+## Implementation
 
-## 🙏 Acknowledgements
+This repository provides an unofficial implementation of the Cascaded Diffusion Model (Cas-DM).
+
+Implementation by **Lê Quang Vĩnh Quyền** (@vinhquyen-lee) based on the original paper.
+
+## Acknowledgements
 This codebase is built upon OpenAI's Improved Diffusion. We thank the authors for their open-source contribution.
 
 ---
